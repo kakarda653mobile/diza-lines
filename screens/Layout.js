@@ -1,5 +1,5 @@
 import React from 'react';
-import { StyleSheet, ImageBackground, SafeAreaView, StatusBar } from 'react-native';
+import { StyleSheet, ImageBackground, SafeAreaView, Platform, StatusBar } from 'react-native';
 
 const Layout = ({children, style}) => {
 
@@ -17,7 +17,7 @@ const Layout = ({children, style}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    padding: 20
+    paddingVertical: Platform.OS === "android" ? StatusBar.currentHeight : 0
   },
   backgroundImage: {
     flex: 1,

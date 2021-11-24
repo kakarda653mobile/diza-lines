@@ -199,13 +199,13 @@ const Main = ({navigation, route}) => {
         <ScoreSection selectedPlayer={selectedPlayer} onTimeIsUp={addScoreToWinner}
                       isPlaying={isPlaying}/>
       </View>
-      <View style={styles.fieldContainer}>
+      <View style={styles.boardContainer}>
         <Board board={board} onSelectCell={handlePlaceCoin} winLine={winLine}/>
       </View>
       <View style={styles.selectedCoinContainer}>
         {selectedCoin && <CoinButton color={selectedCoin.color} form={selectedCoin.form} size={selectedCoin.size}/>}
       </View>
-      <View style={styles.boardContainer}>
+      <View style={styles.groupingSectionContainer}>
         {isPlaying && <GroupingSection mode={groupingMode} onChangeMode={handleChangeGroupingMode}
                                        onSelectCoin={setSelectedCoin} usedCoins={usedCoins}/>}
       </View>
@@ -216,19 +216,28 @@ const Main = ({navigation, route}) => {
 const styles = StyleSheet.create({
   topBarContainer: {
     flex: 0.3,
+    paddingHorizontal: 10
+    // borderWidth: 1
   },
   scoreContainer: {
-    flex: 0.5,
+    flex: 1,
+    paddingHorizontal: 10
+
+    // borderWidth: 1
   },
   selectedCoinContainer: {
     flex: 0.5,
     alignItems:"center",
-  },
-  fieldContainer: {
-    flex: 3,
+    paddingHorizontal: 10
+
   },
   boardContainer: {
+    flex: 3,
+  },
+  groupingSectionContainer: {
     flex: 0.8,
+    paddingHorizontal: 10
+
   },
 });
 
