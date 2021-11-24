@@ -10,7 +10,7 @@ import GroupingSection from "../components/Main/GroupingSection";
 import Board from "../components/Main/Board";
 import TopBar from "../components/Main/TopBar";
 import ScoreSection from "../components/Main/ScoreSection";
-import { FIELD_SIZE, BOARD, WIN_LINE_LENGTH } from "../utils/consts";
+import { BOARD, WIN_LINES } from "../utils/consts";
 import { Context } from "../App";
 import { CoinButton } from "../components/shared/Buttons";
 
@@ -40,104 +40,38 @@ const Main = ({navigation, route}) => {
     }
   }
 
-  const gameCheck = (
-    i = 0,
-    j = 0,
-    prevProperties = {},
-    direction = '',
-    step = 1
-  ) => {
-    let foundProperties = {};
-    let nextStep = 1;
-    let nextProperties = {};
-    if (board[i][j]) {
-      if (prevProperties) {
-        foundProperties.color = prevProperties.color === board[i][j].color && prevProperties.color
-        foundProperties.form = prevProperties.form === board[i][j].form && prevProperties.form
-        foundProperties.size = prevProperties.size === board[i][j].size && prevProperties.size
-      }
-      if ((foundProperties.color || foundProperties.form || foundProperties.size) && step === WIN_LINE_LENGTH) {
-        return {status: 'WIN', cells: [[i, j]]};
-      }
-    } else {
-      return {status: 'NOT YET'};
-    }
-
-    const goNextStep = (x, y, d) => {
-      if (board[i][j]) {
-        if (foundProperties.color || foundProperties.form || foundProperties.size) {
-          nextProperties = {...foundProperties};
-          if (direction === d) {
-            nextStep = step + 1;
-            const result = gameCheck(x, y, nextProperties, d, nextStep);
-            if (result?.status === 'WIN') {
-              return {...result, cells: [...result.cells, [i, j]]};
-            }
-          } else {
-            nextStep = 2;
-            const result = gameCheck(x, y, nextProperties, d, nextStep);
-            if (result?.status === 'WIN') {
-              return {...result, cells: [...result.cells, [i, j]]};
-            }
-          }
+  const newGameCheck = (line) => {
+    const commonProperties = {...board[line[0][0]][line[0][1]]}
+    if (commonProperties && (commonProperties.color || commonProperties.form || commonProperties.size)) {
+      for (let i = 1; i < line.length; i++) {
+        const cell = {...board[line[i][0]][line[i][1]]}
+        if (cell && (cell.color || cell.form || cell.size)) {
+          commonProperties.color !== cell.color && delete commonProperties.color
+          commonProperties.form !== cell.form && delete commonProperties.form
+          commonProperties.size !== cell.size && delete commonProperties.size
         } else {
-          nextProperties = {...board[i][j]};
-          nextStep = 2;
-          const result = gameCheck(x, y, nextProperties, d, nextStep);
-          if (result?.status === 'WIN') {
-            return {...result, cells: [...result.cells, [i, j]]};
-          }
-        }
-      } else {
-        nextStep = 1;
-        const result = gameCheck(x, y, nextProperties, '', nextStep);
-        if (result?.status === 'WIN') {
-          return {...result, cells: [...result.cells, [i, j]]};
+          return false
         }
       }
-    };
-
-    if (i + 1 < FIELD_SIZE) {
-      const result = goNextStep(i + 1, j, 'v');
-      if (result?.status === 'WIN') {
-        return result;
-      }
+      if (commonProperties && (commonProperties.color || commonProperties.form || commonProperties.size)) return true
     }
-    if (j + 1 < FIELD_SIZE) {
-      const result = goNextStep(i, j + 1, 'h');
-      if (result?.status === 'WIN') {
-        return result;
-      }
-    }
-    if (i + 1 < board.length && j + 1 < board.length) {
-      const result = goNextStep(i + 1, j + 1, 'db');
-      if (result?.status === 'WIN') {
-        return result;
-      }
-    }
-    if (i - 1 >= 0 && j + 1 < board.length) {
-      const result = goNextStep(i - 1, j + 1, 'dt');
-      if (result?.status === 'WIN') {
-        return result;
-      }
-    }
-
-    return {status: 'NOT YET'};
-  };
+    return false
+  }
 
   React.useEffect(() => {
-    board.some((row, i) =>
-      row.some((cell, j) => {
-        const res = gameCheck(i, j);
-        if (res.status === 'WIN') {
-          setWinLine(res.cells);
-          addScoreToWinner();
-          // setSelectedPlayer(player => player === player1.key ? player2.key : player1.key)
-          return true;
-        }
-        return false;
+
+    if (!winLine.length) {
+      let newWinLine
+      WIN_LINES.some(line => {
+        const result = newGameCheck(line)
+        if (result) newWinLine = line
+        return result
       })
-    );
+      if (newWinLine) {
+        setWinLine(newWinLine);
+        addScoreToWinner();
+      }
+    }
   }, [board]);
 
   const addScoreToWinner = () => {
@@ -151,6 +85,7 @@ const Main = ({navigation, route}) => {
     }
     setContext(newContext)
     setIsPlaying(false)
+
     setTimeout(() => navigation.navigate('Win', {name: context[winnerPlayer].name}), 1500)
   }
 
@@ -227,7 +162,7 @@ const styles = StyleSheet.create({
   },
   selectedCoinContainer: {
     flex: 0.5,
-    alignItems:"center",
+    alignItems: "center",
     paddingHorizontal: 10
 
   },
