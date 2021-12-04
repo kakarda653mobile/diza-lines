@@ -3,7 +3,7 @@ import { ImageBackground, StyleSheet, View, TouchableOpacity } from 'react-nativ
 
 import { CoinButton } from "../shared/Buttons";
 
-const PADDING = 15
+const PADDING = 20
 
 const Board = ({board, onSelectCell, winLine}) => {
 
@@ -17,7 +17,7 @@ const Board = ({board, onSelectCell, winLine}) => {
   const getBoardSize = (event) => {
     const {width, height} = event.nativeEvent.layout
     const cell = (width - PADDING * 2) / 4
-    const paddingTop = (height - width + PADDING) / 2
+    const paddingTop = (height - width + PADDING) / 2  + 5
     setBoardPaddingTop(paddingTop)
     setCellSize(cell)
   }
@@ -44,7 +44,8 @@ const styles = StyleSheet.create({
   backgroundFieldImage: paddingTop => ({
     flex: 1,
     paddingHorizontal: PADDING,
-    paddingTop
+    paddingTop,
+    // borderWidth: 1
   }),
   row: height => ({
     flexDirection: 'row',

@@ -1,7 +1,7 @@
 import React from 'react';
 import { Text, StyleSheet, Image, View } from 'react-native';
 
-import Layout from './Layout'
+import Layout from '../components/shared/Layout'
 import image from '../assets/images/win_image.png'
 import { Next } from '../components/shared/GameButtons'
 

@@ -27,7 +27,7 @@ const CoinSelectorModal = ({mode, onClose, onSelect, usedCoins}) => {
   >
     <TouchableOpacity onPress={onClose} style={styles.centeredView}>
       <View style={styles.modalView}>
-        <Text>Select {mode}:</Text>
+        <Text>Выберите монетку:</Text>
         {Object.values(colors).map(color => {
           return (<View key={color} style={!COLORS[mode] && styles.row}>
             {Object.values(forms).map(form => {

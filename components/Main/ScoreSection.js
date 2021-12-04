@@ -78,15 +78,16 @@ const styles = StyleSheet.create({
   backgroundImage: {
     flex: 1,
     justifyContent: 'center',
-    alignItems: 'center'
+    alignItems: 'center',
   },
   player: {
     color: 'white',
     fontFamily: 'Calibri-Bold',
     fontSize: 20,
     letterSpacing: 1,
-    marginTop: 5,
+    // marginTop: 5,
     textTransform: 'uppercase',
+    // borderWidth: 1
   },
   selectedPlayer: {
     color: '#fae33e',
@@ -95,6 +96,7 @@ const styles = StyleSheet.create({
   playersContainer: {
     flexDirection: 'row',
     alignItems: 'center',
+    // borderWidth: 1
   },
   playerScore: {
     backgroundColor: 'white',

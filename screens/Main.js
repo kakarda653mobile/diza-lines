@@ -5,7 +5,7 @@ import {
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
-import Layout from './Layout';
+import Layout from '../components/shared/Layout';
 import GroupingSection from "../components/Main/GroupingSection";
 import Board from "../components/Main/Board";
 import TopBar from "../components/Main/TopBar";
@@ -151,27 +151,21 @@ const Main = ({navigation, route}) => {
 const styles = StyleSheet.create({
   topBarContainer: {
     flex: 0.3,
-    paddingHorizontal: 10
     // borderWidth: 1
   },
   scoreContainer: {
     flex: 1,
-    paddingHorizontal: 10
-
     // borderWidth: 1
   },
   selectedCoinContainer: {
     flex: 0.5,
     alignItems: "center",
-    paddingHorizontal: 10
-
   },
   boardContainer: {
     flex: 3,
   },
   groupingSectionContainer: {
     flex: 0.8,
-    paddingHorizontal: 10
 
   },
 });

@@ -27,9 +27,8 @@ const styles = StyleSheet.create({
     fontFamily: 'Calibri-Bold',
     textAlign: 'center',
     color: 'white',
-    fontSize: 19,
+    fontSize: 18,
     textTransform: 'uppercase',
-    marginHorizontal: 5,
     paddingTop: 3,
 
   },
