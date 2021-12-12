@@ -54,9 +54,14 @@ const RoundTimeLimit = () => Button({
   source: require('../../assets/images/blue_long_background.png'),
   text: 'Лимит времени на ход',
 })
-const Rules = ({onPress}) => Button({
+const GameRules = ({onPress}) => Button({
   source: require('../../assets/images/green_long_background.png'),
   text: 'Правила игры',
+  onPress
+})
+const GameRulesFinished = ({onPress}) => Button({
+  source: require('../../assets/images/green_long_background.png'),
+  text: 'Начать играть!',
   onPress
 })
 const RestartGame = ({onPress}) => Button({
@@ -74,4 +79,4 @@ const Back = ({onPress}) => Button({
   onPress
 })
 
-export { NewGame, RestartGame, Settings, Next, RoundTimeLimit, Rules, Back };
+export { NewGame, RestartGame, Settings, Next, RoundTimeLimit, GameRules, Back, GameRulesFinished };

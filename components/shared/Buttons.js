@@ -35,7 +35,7 @@ const Button = ({image, size = SIZES.L, onPress}) => {
     return `${result}%`
   })
   return (
-    <TouchableOpacity style={{width: widthPercent}} onPress={onPress}>
+    <TouchableOpacity style={{width: widthPercent}} onPress={onPress} disabled={!onPress}>
       <Image
         source={image}
         style={styles.image}/>

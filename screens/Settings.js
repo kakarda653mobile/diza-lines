@@ -2,7 +2,11 @@ import React, { useContext, useMemo, useState } from 'react';
 import { View, Text, StyleSheet, Image, TouchableOpacity } from 'react-native';
 
 import Layout from '../components/shared/Layout'
-import { RoundTimeLimit, Rules, Back } from '../components/shared/GameButtons'
+import {
+  RoundTimeLimit as RoundTimeLimitButton,
+  GameRules as GameRulesButton,
+  Back as BackButton
+} from '../components/shared/GameButtons'
 
 import clock from '../assets/images/clock_original.png'
 import clock1 from '../assets/images/segment_original_1.png'
@@ -72,15 +76,24 @@ const Settings = ({navigation}) => {
 
   const selectClock = useMemo(() => {
     switch (selectedTime) {
-      case 0: return clock
-      case 1: return clock1
-      case 2: return clock2
-      case 3: return clock3
-      case 4: return clock4
-      case 5: return clock5
-      case 6: return clock6
-      case 7: return clock7
-      case 8: return clock8
+      case 0:
+        return clock
+      case 1:
+        return clock1
+      case 2:
+        return clock2
+      case 3:
+        return clock3
+      case 4:
+        return clock4
+      case 5:
+        return clock5
+      case 6:
+        return clock6
+      case 7:
+        return clock7
+      case 8:
+        return clock8
     }
   }, [selectedTime])
 
@@ -98,14 +111,18 @@ const Settings = ({navigation}) => {
     navigation.goBack()
   }
 
+  const handleGameRulesPress = () => {
+    navigation.navigate('Rules')
+  }
+
   return (
     <Layout style={styles.layout}>
       <View style={styles.topBarContainer}>
-        <Back onPress={handleBackButtonTouch}/>
+        <BackButton onPress={handleBackButtonTouch}/>
       </View>
       <View style={styles.blockContainer}>
         <View style={styles.buttonContainer}>
-          <RoundTimeLimit/>
+          <RoundTimeLimitButton/>
         </View>
         <View style={styles.container}
               onLayout={onLayout}
@@ -129,7 +146,7 @@ const Settings = ({navigation}) => {
       </View>
       <View style={styles.space}/>
       <View style={styles.blockContainer}>
-        <Rules/>
+        <GameRulesButton onPress={handleGameRulesPress}/>
         <TouchableOpacity style={styles.container}>
           <Image source={rules} style={styles.clock} resizeMode='contain'/>
         </TouchableOpacity>

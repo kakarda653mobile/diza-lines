@@ -1,3 +1,5 @@
+import AsyncStorage from "@react-native-async-storage/async-storage";
+
 export const SIZES = {
   S: 'S',
   M: 'M',
@@ -65,5 +67,7 @@ export const PLAYERS_CONTEXT = {
   settings: {
     roundTime: 0
   },
+  redRules: false
 }
+
 

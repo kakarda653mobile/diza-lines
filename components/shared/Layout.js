@@ -17,7 +17,7 @@ const Layout = ({children, style}) => {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    paddingVertical: Platform.OS === "android" ? 20 : 0,
+    paddingVertical: Platform.OS === "android" ? StatusBar.currentHeight : 0,
     marginHorizontal: 10,
   },
   backgroundImage: {
