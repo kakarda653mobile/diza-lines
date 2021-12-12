@@ -106,6 +106,7 @@ const styles = StyleSheet.create({
   playerScoreText: {
     fontFamily: 'Calibri-Bold',
     fontSize: 20,
+    color: 'black',
     margin: 3,
     marginTop: 5
   },
