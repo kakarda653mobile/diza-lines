@@ -1,7 +1,9 @@
 import React, { useMemo, useState, useContext } from 'react';
 import {
   StyleSheet,
-  View
+  View,
+  KeyboardAvoidingView,
+  Platform
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
 
@@ -126,29 +128,40 @@ const Main = ({navigation, route}) => {
 
 
   return (
-    <Layout>
-      <View style={styles.topBarContainer}>
-        <TopBar onRestart={handleRestartGame} onNewGame={handleNewGame} onGoToSettings={handleGoToSettingsScreen}/>
-      </View>
-      <View style={styles.scoreContainer}>
-        <ScoreSection selectedPlayer={selectedPlayer} onTimeIsUp={addScoreToWinner}
-                      isPlaying={isPlaying}/>
-      </View>
-      <View style={styles.boardContainer}>
-        <Board board={board} onSelectCell={handlePlaceCoin} winLine={winLine}/>
-      </View>
-      <View style={styles.selectedCoinContainer}>
-        {selectedCoin && <CoinButton color={selectedCoin.color} form={selectedCoin.form} size={selectedCoin.size}/>}
-      </View>
-      <View style={styles.groupingSectionContainer}>
-        {isPlaying && <GroupingSection mode={groupingMode} onChangeMode={handleChangeGroupingMode}
-                                       onSelectCoin={setSelectedCoin} usedCoins={usedCoins}/>}
-      </View>
-    </Layout>
+
+    <KeyboardAvoidingView
+      behavior={"height"}
+      style={styles.container}
+      enabled={false}
+    >
+      <Layout>
+        <View style={styles.topBarContainer}>
+          <TopBar onRestart={handleRestartGame} onNewGame={handleNewGame} onGoToSettings={handleGoToSettingsScreen}/>
+        </View>
+        <View style={styles.scoreContainer}>
+          <ScoreSection selectedPlayer={selectedPlayer} onTimeIsUp={addScoreToWinner}
+                        isPlaying={isPlaying}/>
+        </View>
+        <View style={styles.boardContainer}>
+          <Board board={board} onSelectCell={handlePlaceCoin} winLine={winLine}/>
+        </View>
+        <View style={styles.selectedCoinContainer}>
+          {selectedCoin && <CoinButton color={selectedCoin.color} form={selectedCoin.form} size={selectedCoin.size}/>}
+        </View>
+        <View style={styles.groupingSectionContainer}>
+          {isPlaying && <GroupingSection mode={groupingMode} onChangeMode={handleChangeGroupingMode}
+                                         onSelectCoin={setSelectedCoin} usedCoins={usedCoins}/>}
+        </View>
+      </Layout>
+    </KeyboardAvoidingView>
+
   );
 };
 
 const styles = StyleSheet.create({
+  container: {
+    flex: 1
+  },
   topBarContainer: {
     flex: 0.3,
     // borderWidth: 1

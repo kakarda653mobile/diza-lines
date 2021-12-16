@@ -1,14 +1,16 @@
-import React, { useMemo, useState, useContext, useEffect } from 'react';
-import { Image, ImageBackground, StyleSheet, Text, View } from 'react-native';
+import React, { useMemo, useState, useContext, useEffect, useRef } from 'react';
+import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View, TextInput } from 'react-native';
 import { Context } from "../../App";
 
 const ScoreSection = ({selectedPlayer, onTimeIsUp, isPlaying}) => {
 
-  const [{player1, player2, settings: {roundTime}}] = useContext(Context);
+  const [context, setContext] = useContext(Context);
+  const {player1, player2, settings: {roundTime}} = useMemo(() => context, [context])
 
   const [myWidth, setMyWidth] = useState(0)
   const [timeLeft, setTimeLeft] = useState(roundTime)
   const [intervalId, setIntervalId] = useState(null)
+  const [editingPlayer, setEditingPlayer] = useState('')
 
   useEffect(() => {
     intervalId && clearInterval(intervalId)
@@ -44,23 +46,23 @@ const ScoreSection = ({selectedPlayer, onTimeIsUp, isPlaying}) => {
     setMyWidth(width);
   };
 
+  const handlePlayerPress = (key) => {
+    setEditingPlayer(key)
+  }
+
+  const applyPlayerNameChanges = (value) => {
+    setContext({...context, [editingPlayer]: {...context[editingPlayer], name: value}})
+  }
+
   return (
     <ImageBackground source={require('../../assets/images/green_background.png')} resizeMode='contain'
                      style={styles.backgroundImage}>
       <View style={styles.playersContainer}>
-        <Text style={[styles.player, selectedPlayer === player1.key && styles.selectedPlayer]}>{player1.name}</Text>
-        <View style={styles.playerScore}>
-          <Text style={styles.playerScoreText}>
-            {player1.score}
-          </Text>
-        </View>
+        <Player editingPlayer={editingPlayer} selectedPlayer={selectedPlayer} player={player1}
+                applyPlayerNameChanges={applyPlayerNameChanges} onPlayerPress={handlePlayerPress}/>
         <Image style={styles.vs} source={require('../../assets/images/vs.png')}/>
-        <Text style={[styles.player, selectedPlayer === player2.key && styles.selectedPlayer]}>{player2.name}</Text>
-        <View style={styles.playerScore}>
-          <Text style={styles.playerScoreText}>
-            {player2.score}
-          </Text>
-        </View>
+        <Player editingPlayer={editingPlayer} selectedPlayer={selectedPlayer} player={player2}
+                applyPlayerNameChanges={applyPlayerNameChanges} onPlayerPress={handlePlayerPress}/>
       </View>
       {roundTime > 0 && <View style={styles.timeContainer}>
         <View style={styles.timeLine}>
@@ -71,6 +73,43 @@ const ScoreSection = ({selectedPlayer, onTimeIsUp, isPlaying}) => {
       </View>}
 
     </ImageBackground>
+  )
+}
+
+const Player = ({editingPlayer, selectedPlayer, player, applyPlayerNameChanges, onPlayerPress}) => {
+  const inputEl = useRef(null);
+
+  useEffect(() => {
+    if (editingPlayer === player.key) {
+      console.log('useEffect')
+      inputEl.current.focus()
+    }
+  }, [editingPlayer, player.key])
+
+  const handlePlayerPress = (key) => () => {
+    onPlayerPress(key)
+  }
+
+
+  return (
+    <View style={styles.playerContainer}>
+      {editingPlayer === player.key ?
+        <TextInput
+          style={[styles.player]}
+          onChangeText={applyPlayerNameChanges}
+          value={player.name}
+          ref={inputEl}
+        /> :
+        <TouchableOpacity onPress={handlePlayerPress(player.key)}>
+          <Text numberOfLines={1}
+                style={[styles.player, selectedPlayer === player.key && styles.selectedPlayer]}>{player.name}</Text>
+        </TouchableOpacity>}
+      <View style={styles.playerScore}>
+        <Text style={styles.playerScoreText}>
+          {player.score}
+        </Text>
+      </View>
+    </View>
   )
 }
 
@@ -85,23 +124,31 @@ const styles = StyleSheet.create({
     fontFamily: 'Calibri-Bold',
     fontSize: 20,
     letterSpacing: 1,
-    // marginTop: 5,
     textTransform: 'uppercase',
-    // borderWidth: 1
+    paddingHorizontal: 10,
+    flexShrink: 1,
+    // borderWidth: 1,
   },
   selectedPlayer: {
     color: '#fae33e',
-    fontSize: 25,
+    // fontSize: 35,
   },
   playersContainer: {
     flexDirection: 'row',
     alignItems: 'center',
     // borderWidth: 1
   },
+  playerContainer: {
+    flex: 1,
+    flexDirection: 'row',
+    alignItems: 'center',
+    marginLeft: 10,
+    marginRight: 30,
+  },
   playerScore: {
     backgroundColor: 'white',
     borderRadius: 5,
-    marginHorizontal: 5
+    marginHorizontal: 5,
   },
   playerScoreText: {
     fontFamily: 'Calibri-Bold',
