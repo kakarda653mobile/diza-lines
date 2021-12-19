@@ -3,6 +3,7 @@ import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import SplashScreen from 'react-native-splash-screen';
 import AsyncStorage from '@react-native-async-storage/async-storage';
+import { TourGuideProvider } from 'rn-tourguide'
 
 const Stack = createNativeStackNavigator();
 
@@ -67,22 +68,24 @@ const App = () => {
   }, [context?.redRules])
 
   return (
-    <Context.Provider value={[context, handleSetContext]}>
-      {context && !isLoading ?
-        <NavigationContainer>
-          <Stack.Navigator
-            initialRouteName={firstScreen}
-            screenOptions={{
-              headerShown: false
-            }}>
-            <Stack.Screen name="Main" component={Main}/>
-            <Stack.Screen name="Settings" component={Settings} mode="modal"/>
-            <Stack.Screen name="Win" component={Win} mode="modal"/>
-            <Stack.Screen name="Rules" component={Rules} mode="modal"/>
-          </Stack.Navigator>
-        </NavigationContainer> :
-        <Splash/>}
-    </Context.Provider>
+    <TourGuideProvider {...{borderRadius: 5, maskOffset: -5 }}>
+      <Context.Provider value={[context, handleSetContext]}>
+        {context && !isLoading ?
+          <NavigationContainer>
+            <Stack.Navigator
+              initialRouteName={firstScreen}
+              screenOptions={{
+                headerShown: false
+              }}>
+              <Stack.Screen name="Main" component={Main}/>
+              <Stack.Screen name="Settings" component={Settings} mode="modal"/>
+              <Stack.Screen name="Win" component={Win} mode="modal"/>
+              <Stack.Screen name="Rules" component={Rules} mode="modal"/>
+            </Stack.Navigator>
+          </NavigationContainer> :
+          <Splash/>}
+      </Context.Provider>
+    </TourGuideProvider>
   );
 };
 

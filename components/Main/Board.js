@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { ImageBackground, StyleSheet, View, TouchableOpacity } from 'react-native';
+import { TourGuideZone } from 'rn-tourguide'
 
 import { CoinButton } from "../shared/Buttons";
 

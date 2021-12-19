@@ -1,18 +1,35 @@
 import React from 'react';
 import { StyleSheet, View } from 'react-native';
+import { TourGuideZone } from 'rn-tourguide'
+
 import { NewGame, RestartGame, Settings } from "../shared/GameButtons";
 
 const TopBar = ({onRestart, onNewGame, onGoToSettings}) => {
   return (
     <View style={styles.container}>
       <View style={styles.newGameButtonContainer}>
-        <NewGame onPress={onNewGame}/>
+        <TourGuideZone
+          zone={1}
+          text={'Кнопка начинает игру заново. Все очки игроков сбрасываются'}
+        >
+          <NewGame onPress={onNewGame}/>
+        </TourGuideZone>
       </View>
       <View style={styles.restartButtonContainer}>
-        <RestartGame onPress={onRestart}/>
+        <TourGuideZone
+          zone={2}
+          text={'Кнопка начинает текущую партию заново. Очки игроков за предыдущие раунды остаются'}
+        >
+          <RestartGame onPress={onRestart}/>
+        </TourGuideZone>
       </View>
       <View style={styles.settingsButtonContainer}>
-        <Settings onPress={onGoToSettings}/>
+        <TourGuideZone
+          zone={3}
+          text={'Кнопка настроек. Нажмите, если хотите изменить время раунда или прочесть правила ещё раз'}
+        >
+          <Settings onPress={onGoToSettings}/>
+        </TourGuideZone>
       </View>
     </View>
   )

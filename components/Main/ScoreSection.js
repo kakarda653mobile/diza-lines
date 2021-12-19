@@ -1,5 +1,7 @@
 import React, { useMemo, useState, useContext, useEffect, useRef } from 'react';
 import { Image, ImageBackground, StyleSheet, Text, TouchableOpacity, View, TextInput } from 'react-native';
+import { TourGuideZone } from 'rn-tourguide'
+
 import { Context } from "../../App";
 
 const ScoreSection = ({selectedPlayer, onTimeIsUp, isPlaying}) => {
@@ -58,8 +60,10 @@ const ScoreSection = ({selectedPlayer, onTimeIsUp, isPlaying}) => {
     <ImageBackground source={require('../../assets/images/green_background.png')} resizeMode='contain'
                      style={styles.backgroundImage}>
       <View style={styles.playersContainer}>
+
         <Player editingPlayer={editingPlayer} selectedPlayer={selectedPlayer} player={player1}
                 applyPlayerNameChanges={applyPlayerNameChanges} onPlayerPress={handlePlayerPress}/>
+
         <Image style={styles.vs} source={require('../../assets/images/vs.png')}/>
         <Player editingPlayer={editingPlayer} selectedPlayer={selectedPlayer} player={player2}
                 applyPlayerNameChanges={applyPlayerNameChanges} onPlayerPress={handlePlayerPress}/>
@@ -81,7 +85,7 @@ const Player = ({editingPlayer, selectedPlayer, player, applyPlayerNameChanges, 
 
   useEffect(() => {
     if (editingPlayer === player.key) {
-      console.log('useEffect')
+      console.log('useEffect', {player})
       inputEl.current.focus()
     }
   }, [editingPlayer, player.key])
@@ -90,26 +94,39 @@ const Player = ({editingPlayer, selectedPlayer, player, applyPlayerNameChanges, 
     onPlayerPress(key)
   }
 
-
   return (
     <View style={styles.playerContainer}>
-      {editingPlayer === player.key ?
-        <TextInput
-          style={[styles.player]}
-          onChangeText={applyPlayerNameChanges}
-          value={player.name}
-          ref={inputEl}
-        /> :
-        <TouchableOpacity onPress={handlePlayerPress(player.key)}>
-          <Text numberOfLines={1}
-                style={[styles.player, selectedPlayer === player.key && styles.selectedPlayer]}>{player.name}</Text>
-        </TouchableOpacity>}
-      <View style={styles.playerScore}>
-        <Text style={styles.playerScoreText}>
-          {player.score}
-        </Text>
+      <View style={{flex: 1}}>
+        {editingPlayer === player.key ?
+          <TextInput
+            style={[styles.player, selectedPlayer === player.key && styles.selectedPlayer]}
+            autoCapitalize={"characters"}
+            onChangeText={applyPlayerNameChanges}
+            value={player.name}
+            ref={inputEl}
+          /> :
+          <TourGuideZone
+            zone={4}
+            text={'Имя игрока. Нажав на него, можно изменить'}
+          >
+            <TouchableOpacity onPress={handlePlayerPress(player.key)}>
+              <Text numberOfLines={1}
+                    style={[styles.player, selectedPlayer === player.key && styles.selectedPlayer]}>{player.name}</Text>
+            </TouchableOpacity>
+          </TourGuideZone>}
       </View>
+      <TourGuideZone
+        zone={5}
+        text={'Счёт игрока. Увеличивается на один при поебеде в раунде'}
+      >
+        <View style={styles.playerScore}>
+          <Text style={styles.playerScoreText}>
+            {player.score}
+          </Text>
+        </View>
+      </TourGuideZone>
     </View>
+
   )
 }
 
@@ -127,11 +144,12 @@ const styles = StyleSheet.create({
     textTransform: 'uppercase',
     paddingHorizontal: 10,
     flexShrink: 1,
+    textAlign: 'center',
     // borderWidth: 1,
   },
   selectedPlayer: {
     color: '#fae33e',
-    // fontSize: 35,
+    fontSize: 35,
   },
   playersContainer: {
     flexDirection: 'row',
@@ -144,6 +162,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     marginLeft: 10,
     marginRight: 30,
+    borderRadius: 3
   },
   playerScore: {
     backgroundColor: 'white',

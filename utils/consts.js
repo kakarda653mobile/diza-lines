@@ -56,12 +56,12 @@ export const WIN_LINES = [
 export const PLAYERS_CONTEXT = {
   player1: {
     key: 'player1',
-    name: 'Батат',
+    name: 'БАТАТ',
     score: 0
   },
   player2: {
     key: 'player2',
-    name: 'Кирпич',
+    name: 'КИРПИЧ',
     score: 0
   },
   settings: {

@@ -2,10 +2,10 @@ import React, { useMemo, useState, useContext } from 'react';
 import {
   StyleSheet,
   View,
-  KeyboardAvoidingView,
-  Platform
+  KeyboardAvoidingView
 } from 'react-native';
 import { useFocusEffect } from '@react-navigation/native';
+import { useTourGuideController, TourGuideZone } from 'rn-tourguide'
 
 import Layout from '../components/shared/Layout';
 import GroupingSection from "../components/Main/GroupingSection";
@@ -26,6 +26,13 @@ const Main = ({navigation, route}) => {
   const [board, setBoard] = useState(BOARD())
   const [winLine, setWinLine] = useState([])
   const [isPlaying, setIsPlaying] = useState(true)
+
+  const {
+    canStart, // a boolean indicate if you can start tour guide
+    start, // a function to start the tourguide
+    stop, // a function  to stopping it
+    eventEmitter, // an object for listening some events
+  } = useTourGuideController()
 
 
   const handleChangeGroupingMode = () => {
@@ -61,7 +68,6 @@ const Main = ({navigation, route}) => {
   }
 
   React.useEffect(() => {
-
     if (!winLine.length) {
       let newWinLine
       WIN_LINES.some(line => {
@@ -75,6 +81,13 @@ const Main = ({navigation, route}) => {
       }
     }
   }, [board]);
+
+  React.useEffect(() => {
+    if (canStart) {
+      // 👈 test if you can start otherwise nothing will happen
+      start()
+    }
+  }, [canStart]) // 👈 don't miss it!
 
   const addScoreToWinner = () => {
     const winnerPlayer = selectedPlayer === player1.key ? player2.key : player1.key
@@ -128,7 +141,6 @@ const Main = ({navigation, route}) => {
 
 
   return (
-
     <KeyboardAvoidingView
       behavior={"height"}
       style={styles.container}
@@ -142,9 +154,10 @@ const Main = ({navigation, route}) => {
           <ScoreSection selectedPlayer={selectedPlayer} onTimeIsUp={addScoreToWinner}
                         isPlaying={isPlaying}/>
         </View>
-        <View style={styles.boardContainer}>
-          <Board board={board} onSelectCell={handlePlaceCoin} winLine={winLine}/>
-        </View>
+
+          <View style={styles.boardContainer}>
+            <Board board={board} onSelectCell={handlePlaceCoin} winLine={winLine}/>
+          </View>
         <View style={styles.selectedCoinContainer}>
           {selectedCoin && <CoinButton color={selectedCoin.color} form={selectedCoin.form} size={selectedCoin.size}/>}
         </View>
@@ -173,6 +186,10 @@ const styles = StyleSheet.create({
   selectedCoinContainer: {
     flex: 0.5,
     alignItems: "center",
+  },
+  tourGuidContainer: {
+    height: 100,
+    backgroundColor: 'red'
   },
   boardContainer: {
     flex: 3,
