@@ -4,33 +4,41 @@ import { TourGuideZone } from 'rn-tourguide'
 
 import { Context } from "../../App";
 
-const ScoreSection = ({selectedPlayer, onTimeIsUp, isPlaying}) => {
+const ScoreSection = ({ selectedPlayer, onTimeIsUp, isPlaying, isFocused }) => {
 
   const [context, setContext] = useContext(Context);
-  const {player1, player2, settings: {roundTime}} = useMemo(() => context, [context])
+  const { player1, player2, settings: { roundTime } } = useMemo(() => context, [context])
 
   const [myWidth, setMyWidth] = useState(0)
   const [timeLeft, setTimeLeft] = useState(roundTime)
-  const [intervalId, setIntervalId] = useState(null)
   const [editingPlayer, setEditingPlayer] = useState('')
+  const [isFocusedState, setIsFocusedState] = useState(true)
+
+  const refTime = useRef(0)
 
   useEffect(() => {
-    intervalId && clearInterval(intervalId)
-    if (isPlaying && roundTime > 0) {
-      setTimeLeft(roundTime)
-      const id = setInterval(() => setTimeLeft(time => {
-        if (time > 0) {
-          return time - 1
+    let interval
+    if (isPlaying && isFocused && roundTime > 0) {
+      if (isFocusedState) {
+        setTimeLeft(roundTime)
+        refTime.current = roundTime
+        setIsFocusedState(isFocused)
+      }
+      interval = setInterval(() => {
+        if (refTime.current > 0) {
+          setTimeLeft(time => {
+            refTime.current = time - 1
+            return time - 1
+          })
         } else {
-          clearInterval(intervalId)
           onTimeIsUp()
-          return 0
+          clearInterval(interval)
         }
-      }), 1000)
-      setIntervalId(id)
+      }, 1000);
     }
-    return () => intervalId && clearInterval(intervalId)
-  }, [selectedPlayer, isPlaying])
+    setIsFocusedState(isFocused)
+    return () => clearInterval(interval)
+  }, [selectedPlayer, isPlaying, isFocused])
 
   const percentPassedCount = () => {
     const result = 100 - timeLeft / roundTime * 100
@@ -44,7 +52,7 @@ const ScoreSection = ({selectedPlayer, onTimeIsUp, isPlaying}) => {
   }, [timeLeft])
 
   const onLayout = event => {
-    const {width} = event.nativeEvent.layout;
+    const { width } = event.nativeEvent.layout;
     setMyWidth(width);
   };
 
@@ -53,39 +61,39 @@ const ScoreSection = ({selectedPlayer, onTimeIsUp, isPlaying}) => {
   }
 
   const applyPlayerNameChanges = (value) => {
-    setContext({...context, [editingPlayer]: {...context[editingPlayer], name: value}})
+    setContext({ ...context, [editingPlayer]: { ...context[editingPlayer], name: value } })
   }
 
   return (
     <ImageBackground source={require('../../assets/images/green_background.png')} resizeMode='contain'
-                     style={styles.backgroundImage}>
+      style={styles.backgroundImage}>
       <View style={styles.playersContainer}>
 
         <Player editingPlayer={editingPlayer} selectedPlayer={selectedPlayer} player={player1}
-                applyPlayerNameChanges={applyPlayerNameChanges} onPlayerPress={handlePlayerPress}/>
+          applyPlayerNameChanges={applyPlayerNameChanges} onPlayerPress={handlePlayerPress} />
 
-        <Image style={styles.vs} source={require('../../assets/images/vs.png')}/>
+        <Image style={styles.vs} source={require('../../assets/images/vs.png')} />
         <Player editingPlayer={editingPlayer} selectedPlayer={selectedPlayer} player={player2}
-                applyPlayerNameChanges={applyPlayerNameChanges} onPlayerPress={handlePlayerPress}/>
+          applyPlayerNameChanges={applyPlayerNameChanges} onPlayerPress={handlePlayerPress} />
       </View>
       {roundTime > 0 && <View style={styles.timeContainer}>
         <View style={styles.timeLine}>
-          <View style={[styles.timePassedLine, {width: percentPassedCount()}]}/>
+          <View style={[styles.timePassedLine, { width: percentPassedCount() }]} />
         </View>
         <Text onLayout={onLayout}
-              style={[styles.timeLeftTextContainer, {transform: [{translateX: -myWidth / 2}]}]}>{countMinSec}</Text>
+          style={[styles.timeLeftTextContainer, { transform: [{ translateX: -myWidth / 2 }] }]}>{countMinSec}</Text>
       </View>}
 
     </ImageBackground>
   )
 }
 
-const Player = ({editingPlayer, selectedPlayer, player, applyPlayerNameChanges, onPlayerPress}) => {
+const Player = ({ editingPlayer, selectedPlayer, player, applyPlayerNameChanges, onPlayerPress }) => {
   const inputEl = useRef(null);
 
   useEffect(() => {
     if (editingPlayer === player.key) {
-      console.log('useEffect', {player})
+      console.log('useEffect', { player })
       inputEl.current.focus()
     }
   }, [editingPlayer, player.key])
@@ -96,7 +104,7 @@ const Player = ({editingPlayer, selectedPlayer, player, applyPlayerNameChanges, 
 
   return (
     <View style={styles.playerContainer}>
-      <View style={{flex: 1}}>
+      <View style={{ flex: 1 }}>
         {editingPlayer === player.key ?
           <TextInput
             style={[styles.player, selectedPlayer === player.key && styles.selectedPlayer]}
@@ -111,13 +119,13 @@ const Player = ({editingPlayer, selectedPlayer, player, applyPlayerNameChanges, 
           >
             <TouchableOpacity onPress={handlePlayerPress(player.key)}>
               <Text numberOfLines={1}
-                    style={[styles.player, selectedPlayer === player.key && styles.selectedPlayer]}>{player.name}</Text>
+                style={[styles.player, selectedPlayer === player.key && styles.selectedPlayer]}>{player.name}</Text>
             </TouchableOpacity>
           </TourGuideZone>}
       </View>
       <TourGuideZone
         zone={5}
-        text={'Счёт игрока. Увеличивается на один при поебеде в раунде'}
+        text={'Счёт игрока. Увеличивается на один при победе в раунде'}
       >
         <View style={styles.playerScore}>
           <Text style={styles.playerScoreText}>

@@ -4,7 +4,7 @@ import {
   View,
   KeyboardAvoidingView
 } from 'react-native';
-import { useFocusEffect } from '@react-navigation/native';
+import { useFocusEffect, useIsFocused } from '@react-navigation/native';
 import { useTourGuideController, TourGuideZone } from 'rn-tourguide'
 
 import Layout from '../components/shared/Layout';
@@ -19,6 +19,8 @@ import { CoinButton } from "../components/shared/Buttons";
 const Main = ({navigation, route}) => {
   const [context, setContext] = useContext(Context);
   const {player1, player2} = useMemo(() => context, [context])
+
+  const isFocused = useIsFocused();
 
   const [selectedPlayer, setSelectedPlayer] = useState(player1.key)
   const [groupingMode, setGroupingMode] = useState(1)
@@ -139,6 +141,7 @@ const Main = ({navigation, route}) => {
     }, [route.params?.isPlaying])
   );
 
+  console.log('main', {isFocused})
 
   return (
     <KeyboardAvoidingView
@@ -152,9 +155,8 @@ const Main = ({navigation, route}) => {
         </View>
         <View style={styles.scoreContainer}>
           <ScoreSection selectedPlayer={selectedPlayer} onTimeIsUp={addScoreToWinner}
-                        isPlaying={isPlaying}/>
+                        isPlaying={isPlaying} isFocused={isFocused}/>
         </View>
-
           <View style={styles.boardContainer}>
             <Board board={board} onSelectCell={handlePlaceCoin} winLine={winLine}/>
           </View>
