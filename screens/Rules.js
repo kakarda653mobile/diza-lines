@@ -10,7 +10,7 @@ import rulesImage from '../assets/images/rules_image.png'
 import rule1 from '../assets/images/rule_1.png'
 import rule2 from '../assets/images/rule_2.png'
 import rule3 from '../assets/images/rule_3.png'
-import arrowDown from '../assets/images/arrow_down.png'
+// import arrowDown from '../assets/images/arrow_down.png'
 import { Context } from "../App";
 
 const screenHeight = Dimensions.get('window').height;
@@ -66,9 +66,9 @@ const Rules = ({navigation}) => {
           {'    '}Тот кто первый ставит 3-ю фигуру в какой либо победной линии и
           становится победителем
         </Text>
-        <TouchableOpacity style={styles.imageArrowContainer} onPress={handleArrowDownPress}>
+        {/* <TouchableOpacity style={styles.imageArrowContainer} onPress={handleArrowDownPress}>
           <Image style={styles.imageArrow} source={arrowDown} resizeMode='contain'/>
-        </TouchableOpacity>
+        </TouchableOpacity> */}
         <Text style={[styles.textBlock, styles.textBlockCenter]}>
           Примеры победных комбинаций
           (победная линия из 3-х фигур выделена)

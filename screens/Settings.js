@@ -17,7 +17,7 @@ import clock5 from '../assets/images/segment_original_5.png'
 import clock6 from '../assets/images/segment_original_6.png'
 import clock7 from '../assets/images/segment_original_7.png'
 import clock8 from '../assets/images/segment_original_8.png'
-import leftArrow from '../assets/images/left_arrow_selected_time.png'
+// import leftArrow from '../assets/images/left_arrow_selected_time.png'
 import rules from '../assets/images/rules_background.png'
 import { Context } from "../App";
 
@@ -97,7 +97,8 @@ const Settings = ({navigation}) => {
     }
   }, [selectedTime])
 
-  const handleSelectionFinished = () => {
+  const handleSelectionFinished = (event) => {
+    handleSelectionMove(event.nativeEvent.locationX, event.nativeEvent.locationY)
     const newContext = {
       ...context,
       settings: {
@@ -135,19 +136,19 @@ const Settings = ({navigation}) => {
           <Image source={selectClock} style={styles.clock} resizeMode='contain'/>
         </View>
         <View style={styles.selectedTimeContainer}>
-          <View style={styles.arrowContainer}>
+          {/* <View style={styles.arrowContainer}>
             <Image source={leftArrow} style={styles.arrow} resizeMode='contain'/>
-          </View>
+          </View> */}
           <Text style={styles.selectedTimeText}>{selectedTime || 'Безлимит'}</Text>
-          <View style={styles.arrowContainer}>
+          {/* <View style={styles.arrowContainer}>
             <Image source={leftArrow} style={[styles.arrow, styles.rightArrow]} resizeMode='contain'/>
-          </View>
+          </View> */}
         </View>
       </View>
       <View style={styles.space}/>
       <View style={styles.blockContainer}>
         <GameRulesButton onPress={handleGameRulesPress}/>
-        <TouchableOpacity style={styles.container}>
+        <TouchableOpacity onPress={handleGameRulesPress} style={styles.container}>
           <Image source={rules} style={styles.clock} resizeMode='contain'/>
         </TouchableOpacity>
       </View>
@@ -202,10 +203,11 @@ const styles = StyleSheet.create({
     lineHeight: 30,
     textTransform: 'uppercase',
     marginHorizontal: 10,
+    flex: 1
   },
   arrowContainer: {
     flex: 1,
-    // borderWidth: 1
+    borderWidth: 1
   },
   arrow: {
     width: undefined,

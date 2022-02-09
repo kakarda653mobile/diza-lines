@@ -12,14 +12,17 @@ const ScoreSection = ({ selectedPlayer, onTimeIsUp, isPlaying, isFocused }) => {
   const [myWidth, setMyWidth] = useState(0)
   const [timeLeft, setTimeLeft] = useState(roundTime)
   const [editingPlayer, setEditingPlayer] = useState('')
+
   const [isFocusedState, setIsFocusedState] = useState(true)
+  const [roundTimeState, setRoundTimeState] = useState(roundTime)
 
   const refTime = useRef(0)
 
   useEffect(() => {
     let interval
     if (isPlaying && isFocused && roundTime > 0) {
-      if (isFocusedState) {
+      if (isFocusedState || roundTimeState !== roundTime) {
+        setRoundTimeState(roundTime)
         setTimeLeft(roundTime)
         refTime.current = roundTime
         setIsFocusedState(isFocused)
@@ -93,7 +96,6 @@ const Player = ({ editingPlayer, selectedPlayer, player, applyPlayerNameChanges,
 
   useEffect(() => {
     if (editingPlayer === player.key) {
-      console.log('useEffect', { player })
       inputEl.current.focus()
     }
   }, [editingPlayer, player.key])
